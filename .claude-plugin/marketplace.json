@@ -1,0 +1,43 @@
+{
+  "name": "naruto-skills",
+  "owner": {
+    "name": "naruto",
+    "email": "narutoku0428@gmail.com"
+  },
+  "metadata": {
+    "description": "Skills shared by Naruto for improving daily work efficiency",
+    "version": "1.1.0"
+  },
+  "plugins": [
+    {
+      "name": "content-skills",
+      "description": "Content generation and publishing skills",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/cover-image",
+        "./skills/comic",
+        "./skills/infographic",
+        "./skills/article-illustrator"
+      ]
+    },
+    {
+      "name": "ai-generation-skills",
+      "description": "AI-powered generation backends",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/image-gen"
+      ]
+    },
+    {
+      "name": "utility-skills",
+      "description": "Utility tools for content processing",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/url-to-markdown"
+      ]
+    }
+  ]
+}
