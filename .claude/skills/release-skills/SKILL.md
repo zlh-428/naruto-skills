@@ -205,6 +205,6 @@ After successful release, remind user:
 Release v{NEW_VERSION} created locally.
 
 To publish:
-  git push origin master
+  git push origin main
   git push origin v{NEW_VERSION}
 ```
