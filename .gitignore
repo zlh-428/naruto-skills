@@ -143,3 +143,4 @@ tests-data/
 .DS_Store
 
 # Skill extensions (user customization)
+.spec-workflow
