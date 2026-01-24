@@ -38,6 +38,15 @@
       "skills": [
         "./skills/url-to-markdown"
       ]
+    },
+    {
+      "name": "dev-skills",
+      "description": "Development workflow and tools",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/smart-git-commit"
+      ]
     }
   ]
 }
