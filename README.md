@@ -7,6 +7,31 @@ naruto 为提升日常工作效率而分享的 Claude Code 技能集。
 - 已安装 Node.js 环境
 - 能够运行 `npx bun` 命令
 
+## 安装
+
+### 快速安装（推荐）
+
+```bash
+npx skills add zlh-428/naruto-skills
+```
+
+### 注册插件市场
+
+在 Claude Code 中运行：
+
+```bash
+/plugin marketplace add zlh-428/naruto-skills
+```
+
+### 可用插件
+
+| 插件 | 说明 | 包含技能 |
+|------|------|----------|
+| **content-skills** | 内容生成和发布 | [cover-image](#cover-image), [comic](#comic), [infographic](#infographic), [article-illustrator](#article-illustrator) |
+| **ai-generation-skills** | AI 图像生成 | [image-gen](#image-gen) |
+| **utility-skills** | 内容处理工具 | [url-to-markdown](#url-to-markdown) |
+| **dev-skills** | 开发工作流和工具 | [smart-git-commit](#smart-git-commit) |
+
 ## 可用技能
 
 ### 内容生成与发布
@@ -280,6 +305,80 @@ naruto 为提升日常工作效率而分享的 Claude Code 技能集。
 | `-o <path>` | 输出文件路径 |
 | `--wait` | 等待用户信号再捕获 |
 | `--timeout <ms>` | 页面加载超时 (默认: 30000) |
+
+### 开发工作流和工具
+
+#### smart-git-commit
+
+智能 Git 提交工具，自动生成符合 Conventional Commit 格式并带有 Emoji 的提交信息。支持预提交检查、变更分析和智能拆分建议。
+
+```bash
+# 基础提交 (自动生成信息)
+/smart-git-commit
+
+# 自定义提交信息
+/smart-git-commit "add user authentication"
+
+# 跳过预提交检查
+/smart-git-commit --no-verify
+
+# 修正上次提交
+/smart-git-commit --amend
+```
+
+**工作流程**:
+1. **预提交检查** (默认): 运行 `pnpm lint`, `pnpm build`, `pnpm generate:docs`
+2. **暂存分析**: 检查已暂存文件，若无文件则自动暂存所有变更
+3. **变更分析**: 执行 `git diff --cached` 分析变更类型
+4. **智能拆分**: 检测多个独立变更并建议拆分
+5. **生成信息**: 格式 `<emoji> <type>: <description>`
+
+**选项**:
+| 选项 | 描述 |
+|------|------|
+| `[message]` | 自定义提交描述 (可选) |
+| `--no-verify` | 跳过预提交检查 |
+| `--amend` | 修正上次提交 |
+
+**提交类型**:
+| 类型 | Emoji | 描述 |
+|------|-------|------|
+| `feat` | ✨ | 新功能 |
+| `fix` | 🐛 | Bug 修复 |
+| `docs` | 📝 | 文档 |
+| `style` | 💄 | 格式/样式 |
+| `refactor` | ♻️ | 重构 |
+| `perf` | ⚡️ | 性能优化 |
+| `test` | ✅ | 测试 |
+| `chore` | 🔧 | 工具/配置 |
+| `ci` | 🚀 | CI/CD |
+
+**拆分建议**:
+- 不同关注点的变更
+- 混合多种类型 (feat + fix + docs)
+- 不同文件模式 (源代码 vs 文档 vs 测试)
+- 超大的变更集
+
+**示例**:
+```bash
+# 自动生成
+/smart-git-commit
+# 输出: ✨ feat: add user authentication system
+
+# 自定义
+/smart-git-commit "resolve memory leak"
+# 输出: 🐛 fix: resolve memory leak
+
+# 快速修复
+/smart-git-commit --no-verify "typo"
+# 输出: ✏️ fix: typo
+```
+
+**最佳实践**:
+- **原子提交**: 每次提交只做一件事
+- **现在时态**: "add feature" 不是 "added feature"
+- **简洁描述**: 首行不超过 72 字符
+- **审查 diff**: 确保信息匹配变更
 
 ## 环境配置
 
