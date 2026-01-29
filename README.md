@@ -29,7 +29,7 @@ npx skills add zlh-428/naruto-skills
 |------|------|----------|
 | **content-skills** | 内容生成和发布 | [cover-image](#cover-image), [comic](#comic), [infographic](#infographic), [article-illustrator](#article-illustrator) |
 | **ai-generation-skills** | AI 图像生成 | [image-gen](#image-gen) |
-| **utility-skills** | 内容处理工具 | [url-to-markdown](#url-to-markdown) |
+| **utility-skills** | 内容处理工具 | [url-to-markdown](#url-to-markdown), [desktop-screenshot](#desktop-screenshot) |
 | **dev-skills** | 开发工作流和工具 | [smart-git-commit](#smart-git-commit) |
 
 ## 可用技能
@@ -305,6 +305,58 @@ npx skills add zlh-428/naruto-skills
 | `-o <path>` | 输出文件路径 |
 | `--wait` | 等待用户信号再捕获 |
 | `--timeout <ms>` | 页面加载超时 (默认: 30000) |
+
+#### desktop-screenshot
+
+桌面截图工具，使用 imagesnap 捕获屏幕。自动管理截图路径并在发送前删除旧文件。
+
+```bash
+# 基础截图
+/desktop-screenshot
+
+# 自定义输出路径
+/desktop-screenshot --output /path/to/screenshot.png
+
+# 指定显示器
+/desktop-screenshot --display 2
+```
+
+**选项**:
+| 选项 | 描述 | 默认值 |
+|------|------|--------|
+| `--output <path>`, `-o` | 输出图像路径 | `~/.content-gen-skills/desktop-screenshot/screenshot.png` |
+| `--display <number>`, `-d` | 显示器编号 | 1 (主显示器) |
+| `--list-displays` | 列出可用显示器 | - |
+| `--help`, `-h` | 显示帮助 | - |
+
+**环境变量**:
+| 变量 | 描述 | 默认值 |
+|------|------|--------|
+| `SCREENSHOT_PATH` | 默认截图输出路径 | `~/.content-gen-skills/desktop-screenshot/screenshot.png` |
+| `SCREENSHOT_DISPLAY` | 默认显示器编号 | 1 |
+
+**截图路径管理**:
+1. **默认路径**: `~/.content-gen-skills/desktop-screenshot/screenshot.png`
+2. **自动清理**: 截图前删除现有截图
+3. **目录创建**: 自动创建输出目录
+
+**前置要求**:
+```bash
+brew install imagesnap
+```
+
+**使用示例**:
+```bash
+# 基础截图（默认路径）
+/desktop-screenshot
+# 输出: ~/.content-gen-skills/desktop-screenshot/screenshot.png
+
+# 自定义路径
+/desktop-screenshot --output ~/Desktop/capture.png
+
+# 截取副显示器
+/desktop-screenshot --display 2 --output display2.png
+```
 
 ### 开发工作流和工具
 
