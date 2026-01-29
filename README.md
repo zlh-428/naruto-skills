@@ -29,7 +29,7 @@ npx skills add zlh-428/naruto-skills
 |------|------|----------|
 | **content-skills** | 内容生成和发布 | [cover-image](#cover-image), [comic](#comic), [infographic](#infographic), [article-illustrator](#article-illustrator) |
 | **ai-generation-skills** | AI 图像生成 | [image-gen](#image-gen) |
-| **utility-skills** | 内容处理工具 | [url-to-markdown](#url-to-markdown), [desktop-screenshot-peekaboo](#desktop-screenshot-peekaboo) |
+| **utility-skills** | 内容处理工具 | [url-to-markdown](#url-to-markdown) |
 | **dev-skills** | 开发工作流和工具 | [smart-git-commit](#smart-git-commit) |
 
 ## 可用技能
@@ -305,74 +305,6 @@ npx skills add zlh-428/naruto-skills
 | `-o <path>` | 输出文件路径 |
 | `--wait` | 等待用户信号再捕获 |
 | `--timeout <ms>` | 页面加载超时 (默认: 30000) |
-
-#### desktop-screenshot-peekaboo
-
-桌面截图工具，Peekaboo 的简单包装脚本。统一路径管理和定期清理。
-
-```bash
-# 基础截图（全屏、Retina，默认 ~/Desktop/screen.png）
-/desktop-screenshot-peekaboo
-
-# 自定义输出路径
-/desktop-screenshot-peekaboo --output /path/to/screenshot.png
-
-# 清理旧截图（24小时前）
-/desktop-screenshot-peekaboo --clean --older-than 24
-
-# 清理所有截图
-/desktop-screenshot-peekaboo --clean --all
-```
-
-**截图选项**:
-| 选项 | 描述 | 默认值 |
-|------|------|--------|
-| `--output <path>` | 输出图像路径 | `~/Desktop/screen.png` |
-| `--clean` | 执行清理而不是截图 | - |
-| `--older-than <hours>` | 清理 N 小时前的截图（配合 --clean） | `24` |
-| `--all` | 删除所有截图（配合 --clean） | - |
-| `--help`, `-h` | 显示帮助 | - |
-
-**环境变量**:
-| 变量 | 描述 | 默认值 |
-|------|------|--------|
-| `SCREENSHOT_DIR` | 截图目录 | `~/Desktop` |
-| `SCREENSHOT_NAME` | 截图文件名 | `screen.png` |
-| `PEEKABOO_RETINA` | Retina 缩放（默认启用） | `---retina` |
-| `PEEKABOO_MODE` | 捕获模式 | `--mode screen` |
-
-**截图路径管理**:
-1. **默认路径**: `~/Desktop/screen.png`
-2. **自动清理**: 截图前删除现有 screen.png，定期清理旧截图
-3. **目录创建**: 自动创建输出目录
-
-**前置要求**:
-```bash
-brew install steipete/tap/peekaboo
-```
-
-**使用示例**:
-```bash
-# 基础截图（默认路径 ~/Desktop/screen.png，Retina）
-/desktop-screenshot-peekaboo
-# 输出: ~/Desktop/screen.png
-
-# 自定义路径
-/desktop-screenshot-peekaboo --output ~/Desktop/my-screenshot.png
-
-# 清理7天前的截图（168小时）
-/desktop-screenshot-peekaboo --clean --older-than 168
-
-# 清理所有 screen*.png 文件
-/desktop-screenshot-peekaboo --clean --all
-```
-
-**Peekaboo 功能**:
-- ✅ 直接使用 `peekaboo image` 命令
-- ✅ Retina 2x 高分辨率
-- ✅ 统一路径管理
-- ✅ 自动清理旧截图
-- ✅ 简单包装，无过度封装
 
 ### 开发工作流和工具
 
