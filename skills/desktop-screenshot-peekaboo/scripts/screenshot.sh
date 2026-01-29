@@ -9,7 +9,6 @@ SCREENSHOT_PATH="$SCREENSHOT_DIR/$SCREENSHOT_NAME"
 
 # Default options
 RETINA="${PEEKABOO_RETINA:---retina}"
-MODE="${PEEKABOO_MODE:---mode screen}"
 
 function show_help() {
   echo "Desktop Screenshot - Capture via Peekaboo"
@@ -27,14 +26,13 @@ function show_help() {
   echo "  SCREENSHOT_DIR       Screenshot directory (default: ~/Desktop)"
   echo "  SCREENSHOT_NAME       Screenshot filename (default: screen.png)"
   echo "  PEEKABOO_RETINA    Enable Retina (default: enabled)"
-  echo "  PEEKABOO_MODE       Capture mode (default: screen)"
 }
 
 function capture_screenshot() {
   local output_path="$1"
   
   # Use Peekaboo directly
-  peekaboo image --mode screen $RETINA --path "$output_path"
+  peekaboo image --mode screen "$RETINA" --path "$output_path"
 }
 
 function clean_screenshots() {
@@ -47,7 +45,7 @@ function clean_screenshots() {
     echo "Cleaned all screenshots from $SCREENSHOT_DIR"
   else
     # Clean screenshots older than N hours
-    find "$SCREENSHOT_DIR" -maxdepth 1 -name "screen*.png" -type f -mtime +${older_than}h -delete
+    find "$SCREENSHOT_DIR" -maxdepth 1 -name "screen*.png" -type f -mtime +"$older_than"h -delete
     echo "Cleaned screenshots older than $older_than hours from $SCREENSHOT_DIR"
   fi
 }
@@ -59,7 +57,7 @@ CLEAN_ALL=false
 OLDER_THAN=24
 
 while [[ $# -gt 0 ]]; do
-  case $1 in
+  case "$1" in
     --output)
       OUTPUT_PATH="$2"
       shift 2
