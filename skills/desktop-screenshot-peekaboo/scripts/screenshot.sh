@@ -30,7 +30,6 @@ function show_help() {
 
 function capture_screenshot() {
   local output_path="$1"
-  
   # Use Peekaboo directly
   peekaboo image --mode screen "$RETINA" --path "$output_path"
 }
@@ -45,7 +44,7 @@ function clean_screenshots() {
     echo "Cleaned all screenshots from $SCREENSHOT_DIR"
   else
     # Clean screenshots older than N hours
-    find "$SCREENSHOT_DIR" -maxdepth 1 -name "screen*.png" -type f -mtime +"$older_than"h -delete
+    find "$SCREENSHOT_DIR" -maxdepth 1 -name "screen*.png" -type f -mtime +"${older_than}h" -delete
     echo "Cleaned screenshots older than $older_than hours from $SCREENSHOT_DIR"
   fi
 }
