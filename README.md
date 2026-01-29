@@ -308,17 +308,14 @@ npx skills add zlh-428/naruto-skills
 
 #### desktop-screenshot-peekaboo
 
-桌面截图工具，使用 Peekaboo 捕获屏幕。自动管理截图路径并支持定期清理。
+桌面截图工具，Peekaboo 的简单包装脚本。统一路径管理和定期清理。
 
 ```bash
-# 基础截图（全屏、Retina）
+# 基础截图（全屏、Retina，默认 ~/Desktop/screen.png）
 /desktop-screenshot-peekaboo
 
 # 自定义输出路径
 /desktop-screenshot-peekaboo --output /path/to/screenshot.png
-
-# 捕获特定窗口
-/desktop-screenshot-peekaboo --window-title "Notes"
 
 # 清理旧截图（24小时前）
 /desktop-screenshot-peekaboo --clean --older-than 24
@@ -330,35 +327,23 @@ npx skills add zlh-428/naruto-skills
 **截图选项**:
 | 选项 | 描述 | 默认值 |
 |------|------|--------|
-| `--output <path>`, `-o` | 输出图像路径 | `~/.peekaboo-skill/screenshot.png` |
-| `--mode <type>` | 捕获模式: `screen`, `window`, `frontmost`, `multi` | `screen` |
-| `--screen-index <n>`, `-d` | 显示器索引 (0-based) | 0 |
-| `--app <name>` | 目标应用名称 | - |
-| `--window-title <t>` | 窗口标题 | - |
-| `--format <fmt>`, `-f` | 输出格式: `png` 或 `jpg` | `png` |
-| `--retina` | 启用 Retina 2x 缩放 | `true` |
-| `--no-retina` | 禁用 Retina 缩放 | - |
-| `--clean` | 执行清理操作 | - |
+| `--output <path>` | 输出图像路径 | `~/Desktop/screen.png` |
+| `--clean` | 执行清理而不是截图 | - |
+| `--older-than <hours>` | 清理 N 小时前的截图（配合 --clean） | `24` |
+| `--all` | 删除所有截图（配合 --clean） | - |
 | `--help`, `-h` | 显示帮助 | - |
-
-**清理选项** (使用 `--clean`):
-| 选项 | 描述 | 默认值 |
-|------|------|--------|
-| `--older-than <hours>` | 删除 N 小时前的截图 | `24` |
-| `--all` | 删除所有截图 | - |
-| `--dry-run` | 预览而不实际删除 | - |
 
 **环境变量**:
 | 变量 | 描述 | 默认值 |
 |------|------|--------|
-| `SCREENSHOT_PATH` | 默认截图输出路径 | `~/.peekaboo-skill/screenshot.png` |
-| `SCREENSHOT_RETINA` | Retina 缩放 (true/false) | `true` |
-| `SCREENSHOT_FORMAT` | 输出格式 (png/jpg) | `png` |
-| `SCREENSHOT_MODE` | 捕获模式 | `screen` |
+| `SCREENSHOT_DIR` | 截图目录 | `~/Desktop` |
+| `SCREENSHOT_NAME` | 截图文件名 | `screen.png` |
+| `PEEKABOO_RETINA` | Retina 缩放（默认启用） | `---retina` |
+| `PEEKABOO_MODE` | 捕获模式 | `--mode screen` |
 
 **截图路径管理**:
-1. **默认路径**: `~/.peekaboo-skill/screenshot.png`
-2. **自动清理**: 使用 `--clean` 删除旧截图
+1. **默认路径**: `~/Desktop/screen.png`
+2. **自动清理**: 截图前删除现有 screen.png，定期清理旧截图
 3. **目录创建**: 自动创建输出目录
 
 **前置要求**:
@@ -368,25 +353,26 @@ brew install steipete/tap/peekaboo
 
 **使用示例**:
 ```bash
-# 基础截图（默认路径，Retina）
+# 基础截图（默认路径 ~/Desktop/screen.png，Retina）
 /desktop-screenshot-peekaboo
-# 输出: ~/.peekaboo-skill/screenshot.png
+# 输出: ~/Desktop/screen.png
 
-# 自定义路径，窗口模式
-/desktop-screenshot-peekaboo --output ~/Desktop/notes.png --mode window --window-title "Notes"
+# 自定义路径
+/desktop-screenshot-peekaboo --output ~/Desktop/my-screenshot.png
 
-# 捕获所有显示器
-/desktop-screenshot-peekaboo --mode multi
-
-# 清理7天前的截图
+# 清理7天前的截图（168小时）
 /desktop-screenshot-peekaboo --clean --older-than 168
+
+# 清理所有 screen*.png 文件
+/desktop-screenshot-peekaboo --clean --all
 ```
 
 **Peekaboo 功能**:
+- ✅ 直接使用 `peekaboo image` 命令
 - ✅ Retina 2x 高分辨率
-- ✅ 多种捕获模式（屏幕、窗口、前窗口、多显示器）
-- ✅ 内置清理命令
-- ✅ JSON 输出支持自动化
+- ✅ 统一路径管理
+- ✅ 自动清理旧截图
+- ✅ 简单包装，无过度封装
 
 ### 开发工作流和工具
 

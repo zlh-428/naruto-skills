@@ -1,11 +1,11 @@
 ---
 name: desktop-screenshot-peekaboo
-description: Capture desktop screenshots using Peekaboo. Automatically manages screenshot paths and cleanup with Peekaboo's clean command.
+description: Simple wrapper for Peekaboo screenshot. Unified path management and cleanup.
 ---
 
 # Desktop Screenshot (Peekaboo)
 
-Capture desktop screenshots using Peekaboo's `image` command. Automatically manages screenshot paths and deletes old files via Peekaboo's `clean` command.
+Simple wrapper for Peekaboo's `image` command. Provides unified path management and periodic cleanup.
 
 ## Prerequisites
 
@@ -25,178 +25,141 @@ Grant required macOS permissions (Peekaboo will prompt on first run):
 
 **Agent Execution Instructions**:
 1. Determine this SKILL.md file's directory path as `SKILL_DIR`
-2. Script path = `${SKILL_DIR}/scripts/<script-name>.ts`
+2. Script path = `${SKILL_DIR}/scripts/<script-name>.sh`
 3. Replace all `${SKILL_DIR}` in this document with actual path
 
 **Script Reference**:
 | Script | Purpose |
 |--------|---------|
-| `scripts/main.ts` | CLI entry point for desktop screenshot |
-| `scripts/clean.ts` | Cleanup old screenshots |
+| `scripts/screenshot.sh` | Screenshot and cleanup wrapper |
 
 ## Quick Start
 
 ```bash
-# Basic screenshot (full screen, Retina)
-npx -y bun ${SKILL_DIR}/scripts/main.ts
+# Capture with default settings (~/Desktop/screen.png, Retina)
+npx -y bun ${SKILL_DIR}/scripts/screenshot.sh
 
 # Custom output path
-npx -y bun ${SKILL_DIR}/scripts/main.ts --output /path/to/screenshot.png
+npx -y bun ${SKILL_DIR}/scripts/screenshot.sh --output /path/to/screenshot.png
 
-# Capture specific window
-npx -y bun ${SKILL_DIR}/scripts/main.ts --window-title "Safari"
-
-# Clean screenshots older than 24 hours
-npx -y bun ${SKILL_DIR}/scripts/clean.ts --older-than 24
+# Clean old screenshots (24h)
+npx -y bun ${SKILL_DIR}/scripts/screenshot.sh --clean
 ```
 
 ## Commands
 
-### Basic Screenshot
+### Capture Screenshot
 
 ```bash
-# Capture with default settings
-npx -y bun ${SKILL_DIR}/scripts/main.ts
+# Basic capture (default path and settings)
+npx -y bun ${SKILL_DIR}/scripts/screenshot.sh
 
-# Custom output path
-npx -y bun ${SKILL_DIR}/scripts/main.ts --output ~/Desktop/screenshot.png
+# Custom path
+npx -y bun ${SKILL_DIR}/scripts/screenshot.sh --output ~/Desktop/my-screenshot.png
 ```
 
-### Window Capture
-
-```bash
-# Capture specific window by title
-npx -y bun ${SKILL_DIR}/scripts/main.ts --window-title "Notes"
-
-# Capture specific app
-npx -y bun ${SKILL_DIR}/scripts/main.ts --app Safari
-```
-
-### Display Selection
-
-```bash
-# Capture specific display (0-based)
-npx -y bun ${SKILL_DIR}/scripts/main.ts --screen-index 1
-
-# Capture all displays
-npx -y bun ${SKILL_DIR}/scripts/main.ts --mode multi
-```
-
-### Cleanup
+### Cleanup Old Screenshots
 
 ```bash
 # Delete screenshots older than 24 hours
-npx -y bun ${SKILL_DIR}/scripts/clean.ts
+npx -y bun ${SKILL_DIR}/scripts/screenshot.sh --clean --older-than 24
 
-# Delete all screenshots
-npx -y bun ${SKILL_DIR}/scripts/clean.ts --all
-
-# Preview cleanup without deleting
-npx -y bun ${SKILL_DIR}/scripts/clean.ts --dry-run
+# Delete all screen*.png files
+npx -y bun ${SKILL_DIR}/scripts/screenshot.sh --clean --all
 ```
 
 ## Options
 
-### main.ts Options
-
 | Option | Description | Default |
 |--------|-------------|----------|
-| `--output <path>`, `-o` | Output image path | `~/.peekaboo-skill/screenshot.png` |
-| `--mode <type>` | Capture mode: `screen`, `window`, `frontmost`, `multi` | `screen` |
-| `--screen-index <n>` | Specific display index (0-based) | 0 (first display) |
-| `--app <name>` | Target app name | - |
-| `--window-title <title>` | Window title to capture | - |
-| `--format png|jpg` | Output format | `png` |
-| `--retina` | Use Retina 2x scale | `true` |
-| `--help`, `-h` | Show help | - |
-
-### clean.ts Options
-
-| Option | Description | Default |
-|--------|-------------|----------|
-| `--older-than <hours>` | Delete screenshots older than N hours | 24 |
-| `--all` | Delete all screenshots | - |
-| `--dry-run` | Preview without deleting | - |
+| `--output <path>` | Output path (uses directory of path if set) | `~/Desktop/screen.png` |
+| `--clean` | Run cleanup instead of capture | - |
+| `--older-than <hours>` | Cleanup screenshots older than N hours (with --clean) | 24 |
+| `--all` | Delete all screenshots (with --clean) | - |
 | `--help`, `-h` | Show help | - |
 
 ## Screenshot Path Management
 
-The skill automatically manages screenshot paths:
+The skill provides unified screenshot path management:
 
-1. **Default path**: `~/.peekaboo-skill/screenshot.png` (override via `--output`)
-2. **Auto-cleanup**: Use `clean.ts` to delete old screenshots
+1. **Default path**: `~/Desktop/screen.png`
+2. **Auto-cleanup**: Delete existing screenshot before capture
 3. **Directory creation**: Creates output directory if not exists
-4. **Timestamp support**: If output is a directory, appends ISO8601 timestamp
+4. **Periodic cleanup**: Delete old screen*.png files
 
 ### Custom Path via Environment
 
 ```bash
-export SCREENSHOT_PATH=/path/to/screenshots
-npx -y bun ${SKILL_DIR}/scripts/main.ts
+# Override default directory
+export SCREENSHOT_DIR=/path/to/screenshots
+export SCREENSHOT_NAME=screenshot.png
+
+npx -y bun ${SKILL_DIR}/scripts/screenshot.sh
 ```
 
-**Load Priority**: CLI args > `process.env.SCREENSHOT_PATH` > default path
-
-## Examples
-
-### Capture and Clean Workflow
-
-```bash
-# 1. Capture screenshot
-SCREENSHOT_PATH=$(npx -y bun ${SKILL_DIR}/scripts/main.ts)
-
-# 2. Send via WhatsApp (example)
-moltbot message send --target +1234567890 --file "$SCREENSHOT_PATH"
-
-# 3. Clean old screenshots (older than 24h)
-npx -y bun ${SKILL_DIR}/scripts/clean.ts
-```
-
-### Capture Specific Window
-
-```bash
-# Capture Safari window
-npx -y bun ${SKILL_DIR}/scripts/main.ts --app Safari
-
-# Capture window by title
-npx -y bun ${SKILL_DIR}/scripts/main.ts --window-title "Release Notes"
-```
-
-### Periodic Cleanup
-
-```bash
-# Clean screenshots older than 7 days (168 hours)
-npx -y bun ${SKILL_DIR}/scripts/clean.ts --older-than 168
-
-# Clean all screenshots
-npx -y bun ${SKILL_DIR}/scripts/clean.ts --all
-```
+**Path Priority**:
+1. `--output` argument (full path) or directory
+2. `SCREENSHOT_DIR` environment variable (defaults to `~/Desktop`)
+3. `SCREENSHOT_NAME` environment variable (defaults to `screen.png`)
 
 ## Environment Variables
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `SCREENSHOT_PATH` | Default screenshot output path | `~/.peekaboo-skill/screenshot.png` |
-| `SCREENSHOT_RETINA` | Enable Retina 2x scale | `true` |
-| `SCREENSHOT_FORMAT` | Output format (png/jpg) | `png` |
-| `SCREENSHOT_CLEANUP_HOURS` | Default cleanup age threshold | `24` |
+| `SCREENSHOT_DIR` | Screenshot directory | `~/Desktop` |
+| `SCREENSHOT_NAME` | Screenshot filename | `screen.png` |
+| `PEEKABOO_RETINA` | Retina 2x scaling | `---retina` (enabled) |
+| `PEEKABOO_MODE` | Capture mode | `--mode screen` |
+
+## Examples
+
+### Basic Usage
+
+```bash
+# Capture to default path (~/Desktop/screen.png)
+npx -y bun ${SKILL_DIR}/scripts/screenshot.sh
+
+# Capture to Desktop with custom name
+npx -y bun ${SKILL_DIR}/scripts/screenshot.sh --output ~/Desktop/workspace.png
+```
+
+### Cleanup Workflow
+
+```bash
+# Clean screenshots older than 7 days (168 hours)
+npx -y bun ${SKILL_DIR}/scripts/screenshot.sh --clean --older-than 168
+
+# Clean all screenshots
+npx -y bun ${SKILL_DIR}/scripts/screenshot.sh --clean --all
+```
+
+### Capture + Clean Automation
+
+```bash
+# 1. Capture screenshot (auto-deletes old screen.png)
+SCREENSHOT_PATH=$(npx -y bun ${SKILL_DIR}/scripts/screenshot.sh)
+
+# 2. Send via WhatsApp (example)
+moltbot message send --target +1234567890 --file "$SCREENSHOT_PATH"
+
+# 3. Periodically clean old screenshots
+npx -y bun ${SKILL_DIR}/scripts/screenshot.sh --clean --older-than 168
+```
 
 ## Error Handling
 
 - **Peekaboo not found**: Provides install command
 - **Permission denied**: Instructions to enable Screen Recording + Accessibility
-- **No displays found**: Troubleshooting steps
 - **Output path not writable**: Creates directory or errors with details
 
 ## Peekaboo Features
 
-This skill leverages Peekaboo's advanced capabilities:
+This skill is a simple wrapper that leverages Peekaboo's capabilities:
 
 - **Retina 2x scaling**: High-resolution captures
-- **Window/Screen/Menu modes**: Flexible capture targets
-- **Multi-display support**: Capture specific or all screens
-- **Built-in cleanup**: `peekaboo clean` manages snapshot cache
-- **JSON output**: Machine-readable for automation
+- **Simple command**: `peekaboo image --mode screen --retina`
+- **Auto-cleanup**: Delete old screen*.png files
+- **Direct usage**: No complex wrapper, just pass options
 
 ## Extension Support
 
